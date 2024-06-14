@@ -6,7 +6,7 @@ use Exception;
 use Utopia\Storage\Device;
 use Utopia\Storage\Storage;
 
-class S3 extends Device
+class MinIO extends Device
 {
     const METHOD_GET = 'GET';
 
@@ -155,7 +155,7 @@ class S3 extends Device
     protected ?int $curlHttpVersion = null;
 
     /**
-     * S3 Constructor
+     * MinIO Constructor
      *
      * @param  string  $root
      * @param  string  $accessKey
@@ -177,15 +177,9 @@ class S3 extends Device
         if (! empty($endpointUrl)) {
             $host = $bucket.'.'.$endpointUrl;
         } else {
-            $host = match ($region) {
-                self::CN_NORTH_1, self::CN_NORTH_4, self::CN_NORTHWEST_1 => $bucket.'.s3.'.$region.'.amazonaws.cn',
-                default => $bucket.'.s3.'.$region.'.amazonaws.com'
-            };
+            throw new Exception('Endpoint Url not found');
         }
 
-        echo ">>>>>>>>>>>>>>>>>>"
-        echo $host
-        echo "<<<<<<<<<<<<<<<<<<"
         $this->headers['host'] = $host;
     }
 
@@ -194,7 +188,7 @@ class S3 extends Device
      */
     public function getName(): string
     {
-        return 'S3 Storage';
+        return 'MinIO Storage';
     }
 
     /**
@@ -202,7 +196,7 @@ class S3 extends Device
      */
     public function getType(): string
     {
-        return Storage::DEVICE_S3;
+        return Storage::DEVICE_MINIO;
     }
 
     /**
@@ -210,7 +204,7 @@ class S3 extends Device
      */
     public function getDescription(): string
     {
-        return 'S3 Bucket Storage drive for AWS or on premise solution';
+        return 'S3 Bucket Storage drive for MinIO or on premise solution';
     }
 
     /**
